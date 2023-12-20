@@ -21,15 +21,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LuceneIndexing {
+public class LuceneIndex {
     public static final String FIELD_NAME_FORM_ID = "formId";
     public static final String FIELD_NAME_FORM_NAME = "formName";
     public static final String FIELD_NAME_FORM_NAME_CN = "formNameCN";
 
     private final RAMDirectory indexDir = new RAMDirectory();
+    private final Analyzer analyzer = new StandardAnalyzer();
+    private final int MAX_HIT_SIZE = 100;
 
-    public void indexing(List<Request> requests) {
-        Analyzer analyzer = new StandardAnalyzer();
+    public void buildIndex(List<Request> requests) {
         try {
             IndexWriter writer = new IndexWriter(indexDir, new IndexWriterConfig(analyzer));
             for (Request request : requests) {
@@ -54,22 +55,35 @@ public class LuceneIndexing {
 
     public List<Request> search(String keywords) {
         try {
-//            Query query = new TermQuery(new Term(FIELD_NAME_FORM_NAME, keywords));
-            Query query = new QueryParser(FIELD_NAME_FORM_NAME, new StandardAnalyzer()).parse(keywords);
+            Query query = new QueryParser(FIELD_NAME_FORM_NAME, analyzer).parse(keywords);
 
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
-            TopDocs docs = searcher.search(query, 100);
+            TopDocs docs = searcher.search(query, MAX_HIT_SIZE);
 
-            List<Request> matched = new ArrayList<>();
-            for (ScoreDoc scoreDoc : docs.scoreDocs) {
-                matched.add(Request.builder()
-                        .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
-                        .build());
-            }
-
-            return matched;
+            return toRequests(docs, searcher);
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Request> search(Query query) {
+        try {
+            IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
+            TopDocs docs = searcher.search(query, MAX_HIT_SIZE);
+
+            return toRequests(docs, searcher);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static List<Request> toRequests(TopDocs docs, IndexSearcher searcher) throws IOException {
+        List<Request> matched = new ArrayList<>();
+        for (ScoreDoc scoreDoc : docs.scoreDocs) {
+            matched.add(Request.builder()
+                    .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
+                    .build());
+        }
+        return matched;
     }
 }
