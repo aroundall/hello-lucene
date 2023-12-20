@@ -23,4 +23,12 @@ class SearchServiceTest {
 
         Assertions.assertThat(matched).hasSize(2);
     }
+
+    @Test
+    void matched_chinese_keyword_should_have_result() {
+        SearchService searchService = new SearchService();
+        List<Request> matched = searchService.search(new TermQuery(new Term("formNameCN", "会面")));
+
+        Assertions.assertThat(matched).hasSize(1);
+    }
 }

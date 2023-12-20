@@ -1,7 +1,7 @@
 package io.amuji;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -28,7 +28,7 @@ public class LuceneIndex {
     public static final String FIELD_NAME_FORM_NAME_CN = "formNameCN";
 
     private final Directory indexDir = new ByteBuffersDirectory();
-    private final Analyzer analyzer = new StandardAnalyzer();
+    private final Analyzer analyzer = new SmartChineseAnalyzer();
     private final int MAX_HIT_SIZE = 100;
 
     public void buildIndex(List<Request> requests) {
