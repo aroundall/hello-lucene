@@ -15,7 +15,8 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.store.ByteBuffersDirectory;
+import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class LuceneIndex {
     public static final String FIELD_NAME_FORM_NAME = "formName";
     public static final String FIELD_NAME_FORM_NAME_CN = "formNameCN";
 
-    private final RAMDirectory indexDir = new RAMDirectory();
+    private final Directory indexDir = new ByteBuffersDirectory();
     private final Analyzer analyzer = new StandardAnalyzer();
     private final int MAX_HIT_SIZE = 100;
 
