@@ -1,5 +1,6 @@
 package io.amuji;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+
 public class LuceneIndex {
     public static final String FIELD_NAME_FORM_ID = "formId";
     public static final String FIELD_NAME_FORM_NAME = "formName";
@@ -32,6 +35,7 @@ public class LuceneIndex {
     private final int MAX_HIT_SIZE = 100;
 
     public void buildIndex(List<Request> requests) {
+        log.info("Start to build index for {} docs", requests.size());
         try {
             IndexWriter writer = new IndexWriter(indexDir, new IndexWriterConfig(analyzer));
             for (Request request : requests) {
@@ -44,6 +48,7 @@ public class LuceneIndex {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        log.info("Completed to build index for {} docs", requests.size());
     }
 
     private static Document createDocument(Request request) {
