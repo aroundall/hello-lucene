@@ -1,7 +1,11 @@
 package io.amuji;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 public class SearchService {
 
     private final LuceneIndex index;
@@ -13,6 +17,14 @@ public class SearchService {
     }
 
     public List<Request> search(Search search) {
-        return index.search(search);
+        log.info("Start to search...");
+        if (search.isBlank()) {
+            log.warn("The search criteria is blank, returns empty.");
+            return Collections.emptyList();
+        }
+
+        List<Request> result = index.search(search);
+        log.info("Finished searching.");
+        return result;
     }
 }
