@@ -10,18 +10,19 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 
 @Slf4j
 
@@ -72,6 +73,31 @@ public class LuceneIndex {
         }
     }
 
+    public List<Request> search(Search search) {
+        Query query = buildQuery(search);
+        return search(query);
+    }
+
+    private Query buildQuery(Search search) {
+        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        if (Objects.nonNull(search.getKeywords())) {
+            queryBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), MUST);
+        }
+
+        return parseQuery(queryBuilder.build());
+    }
+
+    private Query parseQuery(Query query) {
+        try {
+            log.info("The input query: {}", query.toString());
+            Query parsed = new QueryParser(FIELD_NAME_FORM_NAME, analyzer).parse(query.toString());
+            log.info("The parsed query: {}", parsed.toString());
+            return parsed;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Request> search(Query query) {
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
@@ -92,4 +118,5 @@ public class LuceneIndex {
         }
         return matched;
     }
+
 }

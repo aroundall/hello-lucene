@@ -21,4 +21,8 @@ public class SearchService {
     public List<Request> search(Query query) {
         return index.search(query);
     }
+
+    public List<Request> search(Search search) {
+        return index.search(search);
+    }
 }

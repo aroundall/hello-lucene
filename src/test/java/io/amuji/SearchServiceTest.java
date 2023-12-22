@@ -19,9 +19,9 @@ class SearchServiceTest {
     @Test
     void matched_term_query_should_have_result() {
         SearchService searchService = new SearchService();
-        List<Request> matched = searchService.search(new TermQuery(new Term("formName", "address")));
+        List<Request> matched = searchService.search(new Search().setKeywords("Certificate"));
 
-        Assertions.assertThat(matched).hasSize(2);
+        Assertions.assertThat(matched).hasSize(1);
     }
 
     @Test

@@ -10,4 +10,5 @@ public class Request {
     private String formName;
     private String formNameCN;
     private String category;
+    private String categoryId;
 }
