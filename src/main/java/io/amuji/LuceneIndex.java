@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
+import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
 
 @Slf4j
 
@@ -30,10 +31,10 @@ public class LuceneIndex {
     public static final String FIELD_NAME_FORM_ID = "formId";
     public static final String FIELD_NAME_FORM_NAME = "formName";
     public static final String FIELD_NAME_FORM_NAME_CN = "formNameCN";
+    private static final int MAX_HIT_SIZE = 100;
 
     private final Directory indexDir = new ByteBuffersDirectory();
     private final Analyzer analyzer = new SmartChineseAnalyzer();
-    private final int MAX_HIT_SIZE = 100;
 
     public void buildIndex(List<Request> requests) {
         log.info("Start to build index for {} docs", requests.size());
@@ -60,19 +61,6 @@ public class LuceneIndex {
         return document;
     }
 
-    public List<Request> search(String keywords) {
-        try {
-            Query query = new QueryParser(FIELD_NAME_FORM_NAME, analyzer).parse(keywords);
-
-            IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
-            TopDocs docs = searcher.search(query, MAX_HIT_SIZE);
-
-            return toRequests(docs, searcher);
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public List<Request> search(Search search) {
         Query query = buildQuery(search);
         return search(query);
@@ -81,7 +69,10 @@ public class LuceneIndex {
     private Query buildQuery(Search search) {
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
         if (Objects.nonNull(search.getKeywords())) {
-            queryBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), MUST);
+            queryBuilder.add(new BooleanQuery.Builder()
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), SHOULD)
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywords())), SHOULD)
+                    .build(), MUST);
         }
 
         return parseQuery(queryBuilder.build());

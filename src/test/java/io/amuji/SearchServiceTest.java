@@ -1,7 +1,5 @@
 package io.amuji;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.TermQuery;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +9,7 @@ class SearchServiceTest {
     @Test
     void matched_keyword_should_have_result() {
         SearchService searchService = new SearchService();
-        List<Request> matched = searchService.search("Address");
+        List<Request> matched = searchService.search(new Search().setKeywords("Address"));
 
         Assertions.assertThat(matched).hasSize(2);
     }
@@ -27,7 +25,7 @@ class SearchServiceTest {
     @Test
     void matched_chinese_keyword_should_have_result() {
         SearchService searchService = new SearchService();
-        List<Request> matched = searchService.search(new TermQuery(new Term("formNameCN", "会面")));
+        List<Request> matched = searchService.search(new Search().setKeywords("会面"));
 
         Assertions.assertThat(matched).hasSize(1);
     }
