@@ -63,4 +63,12 @@ class SearchServiceTest {
         List<Request> matched = searchService.search(new Search().addCategory("CG567890123").setKeywords("Procedure"));
         assertThat(matched).hasSize(1);
     }
+
+    @Test
+    void matched_keywords_should_return_result() {
+        List<Request> matched = searchService.search(new Search()
+                .setKeywords("Mortgage Payment"));
+        assertThat(matched).isNotEmpty();
+    }
+
 }

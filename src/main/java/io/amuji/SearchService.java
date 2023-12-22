@@ -24,7 +24,7 @@ public class SearchService {
         }
 
         List<Request> result = index.search(search);
-        log.info("Finished searching.");
+        log.info("Finished searching: {}", result);
         return result;
     }
 }
