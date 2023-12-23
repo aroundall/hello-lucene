@@ -9,6 +9,7 @@ public class Request {
     private String formId;
     private String formName;
     private String formNameCN;
+    private String formNameTC;
     private String category;
     private String categoryId;
 }

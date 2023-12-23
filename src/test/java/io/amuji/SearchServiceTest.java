@@ -31,7 +31,7 @@ class SearchServiceTest {
     }
 
     @Test
-    void matched_chinese_keyword_should_have_result() {
+    void matched_simplified_chinese_keyword_should_have_result() {
         List<Request> matched = searchService.search(new Search().setKeywords("会面"));
 
         assertThat(matched).hasSize(1);
@@ -71,4 +71,24 @@ class SearchServiceTest {
         assertThat(matched).isNotEmpty();
     }
 
+
+    @Test
+    void matched_categories_and_keywords_should_return_result() {
+        List<Request> matched = searchService.search(new Search()
+                .addCategory("CG345678901")
+                .addCategory("CG345678901")
+                .setKeywords("Mortgage Payment"));
+        assertThat(matched).hasSize(2);
+    }
+
+    @Test
+    void matched_traditional_chinese_should_return_result() {
+        List<Request> matched = searchService.search(new Search()
+                .setKeywords("貸款還款"));
+        assertThat(matched).hasSize(4);
+
+        matched = searchService.search(new Search()
+                .setKeywords("贷款还款"));
+        assertThat(matched).hasSize(4);
+    }
 }

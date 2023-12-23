@@ -2,7 +2,7 @@ package io.amuji;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
+import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.document.Document;
@@ -33,6 +33,7 @@ public class LuceneIndex {
     public static final String FIELD_NAME_FORM_ID = "formId";
     public static final String FIELD_NAME_FORM_NAME = "formName";
     public static final String FIELD_NAME_FORM_NAME_CN = "formNameCN";
+    public static final String FIELD_NAME_FORM_NAME_TC = "formNameTC";
     public static final String FIELD_NAME_CAT_ID = "categoryId";
     private static final int MAX_HIT_SIZE = 100;
 
@@ -40,7 +41,7 @@ public class LuceneIndex {
     private final Analyzer analyzer;
     {
         Map<String, Analyzer> analyzerMap = Map.of(FIELD_NAME_CAT_ID, new KeywordAnalyzer());
-        analyzer= new PerFieldAnalyzerWrapper(new SmartChineseAnalyzer(), analyzerMap);
+        analyzer= new PerFieldAnalyzerWrapper(new CJKAnalyzer(), analyzerMap);
     }
 
     public void buildIndex(List<Request> requests) {
@@ -65,6 +66,7 @@ public class LuceneIndex {
         document.add(new StringField(FIELD_NAME_FORM_ID, request.getFormId(), Field.Store.YES));
         document.add(new TextField(FIELD_NAME_FORM_NAME, request.getFormName(), Field.Store.YES));
         document.add(new TextField(FIELD_NAME_FORM_NAME_CN, request.getFormNameCN(), Field.Store.YES));
+        document.add(new TextField(FIELD_NAME_FORM_NAME_TC, request.getFormNameTC(), Field.Store.YES));
         document.add(new StringField(FIELD_NAME_CAT_ID, request.getCategoryId(), Field.Store.YES));
         return document;
     }
@@ -80,6 +82,7 @@ public class LuceneIndex {
             queryBuilder.add(new BooleanQuery.Builder()
                     .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), SHOULD)
                     .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywords())), SHOULD)
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getKeywords())), SHOULD)
                     .build(), MUST);
         }
 

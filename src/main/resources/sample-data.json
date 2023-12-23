@@ -3,6 +3,7 @@
     "formId": "FM12345",
     "formName": "Change of Address Form",
     "formNameCN": "地址变更表",
+    "formNameTC": "地址變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -10,6 +11,7 @@
     "formId": "FM56789",
     "formName": "Dispute a Transaction Form",
     "formNameCN": "交易争议表",
+    "formNameTC": "交易爭議表",
     "category": "Transaction-Related Queries",
     "categoryId": "CG234567890"
   },
@@ -17,6 +19,7 @@
     "formId": "FM90123",
     "formName": "Apply for a New Loan Form",
     "formNameCN": "贷款申请表",
+    "formNameTC": "貸款申請表",
     "category": "Loan and Mortgage Services",
     "categoryId": "CG345678901"
   },
@@ -24,6 +27,7 @@
     "formId": "FM34567",
     "formName": "Open a New Investment Account Form",
     "formNameCN": "开户申请表",
+    "formNameTC": "開戶申請表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -31,6 +35,7 @@
     "formId": "FM78901",
     "formName": "Submit a General Inquiry Form",
     "formNameCN": "一般查询表",
+    "formNameTC": "一般查詢表",
     "category": "General Customer Service",
     "categoryId": "CG567890123"
   },
@@ -38,6 +43,7 @@
     "formId": "FM11123",
     "formName": "Change of Phone Number Form",
     "formNameCN": "电话号码变更表",
+    "formNameTC": "電話號碼變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -45,6 +51,7 @@
     "formId": "FM22234",
     "formName": "Report a Fraudulent Transaction Form",
     "formNameCN": "欺诈交易报告表",
+    "formNameTC": "欺詐交易報告表",
     "category": "Transaction-Related Queries",
     "categoryId": "CG234567890"
   },
@@ -52,6 +59,7 @@
     "formId": "FM33345",
     "formName": "Request a Loan Payoff Quote Form",
     "formNameCN": "贷款还款报价申请表",
+    "formNameTC": "貸款還款報價申請表",
     "category": "Loan and Mortgage Services",
     "categoryId": "CG345678901"
   },
@@ -59,6 +67,7 @@
     "formId": "FM44456",
     "formName": "Transfer Funds Between Investment Accounts Form",
     "formNameCN": "投资账户间资金划转表",
+    "formNameTC": "投資賬戶間資金劃轉表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -66,6 +75,7 @@
     "formId": "FM55567",
     "formName": "Request a Meeting with a Bank Representative Form",
     "formNameCN": "要求与银行代表会面表",
+    "formNameTC": "要求與銀行代表會面表",
     "category": "General Customer Service",
     "categoryId": "CG567890123"
   },
@@ -73,6 +83,7 @@
     "formId": "FM66678",
     "formName": "Change of Email Address Form",
     "formNameCN": "电子邮件地址变更表",
+    "formNameTC": "電子郵件地址變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -80,6 +91,7 @@
     "formId": "FM77789",
     "formName": "Request a Stop Payment on a Check Form",
     "formNameCN": "支票止付申请表",
+    "formNameTC": "支票止付申請表",
     "category": "Transaction-Related Queries",
     "categoryId": "CG234567890"
   },
@@ -87,6 +99,7 @@
     "formId": "FM88890",
     "formName": "Change the Due Date of a Loan or Mortgage Payment Form",
     "formNameCN": "贷款或抵押贷款还款日期变更表",
+    "formNameTC": "貸款或抵押貸款還款日期變更表",
     "category": "Loan and Mortgage Services",
     "categoryId": "CG345678901"
   },
@@ -94,6 +107,7 @@
     "formId": "FM99901",
     "formName": "Change Investment Instructions Form",
     "formNameCN": "更改投资指令表",
+    "formNameTC": "更改投資指令表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -101,6 +115,7 @@
     "formId": "FM10101",
     "formName": "Request a Copy of a Bank Policy or Procedure Form",
     "formNameCN": "要求提供银行政策或程序副本表",
+    "formNameTC": "要求提供銀行政策或程序副本表",
     "category": "General Customer Service",
     "categoryId": "CG567890123"
   },
@@ -108,6 +123,7 @@
     "formId": "FM11111",
     "formName": "Update of Personal Information Form",
     "formNameCN": "个人信息更新表",
+    "formNameTC": "個人信息更新表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -115,6 +131,7 @@
     "formId": "FM12121",
     "formName": "Inquire About a Pending Transaction Form",
     "formNameCN": "查询待处理交易表",
+    "formNameTC": "查詢待處理交易表",
     "category": "Transaction-Related Queries",
     "categoryId": "CG234567890"
   },
@@ -122,6 +139,7 @@
     "formId": "FM13131",
     "formName": "Request a Forbearance or Modification of a Loan or Mortgage Form",
     "formNameCN": "要求宽限或修改贷款或抵押贷款表",
+    "formNameTC": "要求寬限或修改貸款或抵押貸款表",
     "category": "Loan and Mortgage Services",
     "categoryId": "CG345678901"
   },
@@ -129,6 +147,7 @@
     "formId": "FM14141",
     "formName": "Request a Withdrawal from an Investment Account Form",
     "formNameCN": "要求从投资账户中提取资金表",
+    "formNameTC": "要求從投資賬戶中提取資金表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -136,6 +155,7 @@
     "formId": "FM15151",
     "formName": "Provide Feedback on the Bank's Products or Services Form",
     "formNameCN": "提供对银行产品或服务的反馈表",
+    "formNameTC": "提供對銀行產品或服務的回饋表",
     "category": "General Customer Service",
     "categoryId": "CG567890123"
   },
@@ -143,6 +163,7 @@
     "formId": "FM16161",
     "formName": "Request for a New Debit or Credit Card Form",
     "formNameCN": "要求提供新借记卡或信用卡表",
+    "formNameTC": "要求提供新借記卡或信用卡表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -150,6 +171,7 @@
     "formId": "FM17171",
     "formName": "Inquire About Investment Performance Form",
     "formNameCN": "查询投资绩效表",
+    "formNameTC": "查詢投資績效表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -157,6 +179,7 @@
     "formId": "FM18181",
     "formName": "Apply for a Home Equity Line of Credit (HELOC) Form",
     "formNameCN": "申请房屋净值信贷额度 (HELOC) 表",
+    "formNameTC": "申請房屋淨值信貸額度 (HELOC) 表",
     "category": "Loan and Mortgage Services",
     "categoryId": "CG345678901"
   },
@@ -164,6 +187,7 @@
     "formId": "FM19191",
     "formName": "Request Assistance with Online Banking or Mobile Banking Form",
     "formNameCN": "要求协助在线银行或移动银行表",
+    "formNameTC": "要求協助在線銀行或移動銀行表",
     "category": "General Customer Service",
     "categoryId": "CG567890123"
   },
@@ -171,6 +195,7 @@
     "formId": "FM20201",
     "formName": "Request a Copy of a Bank Statement Form",
     "formNameCN": "要求提供银行对账单副本表",
+    "formNameTC": "要求提供銀行對賬單副本表",
     "category": "Transaction-Related Queries",
     "categoryId": "CG234567890"
   },
@@ -178,6 +203,7 @@
     "formId": "FM21211",
     "formName": "Request for a Name Change Form",
     "formNameCN": "要求更名表",
+    "formNameTC": "要求更名表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -185,6 +211,7 @@
     "formId": "FM22222",
     "formName": "Request for a Marital Status Change Form",
     "formNameCN": "要求婚姻状况变更表",
+    "formNameTC": "要求婚姻狀況變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -192,6 +219,7 @@
     "formId": "FM23232",
     "formName": "Request for a Social Security Number Change Form",
     "formNameCN": "要求社会安全号码变更表",
+    "formNameTC": "要求社會安全號碼變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -199,6 +227,7 @@
     "formId": "FM24242",
     "formName": "Request for a Tax Identification Number Change Form",
     "formNameCN": "要求纳税识别号变更表",
+    "formNameTC": "要求納稅識別號變更表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -206,6 +235,7 @@
     "formId": "FM25252",
     "formName": "Request for a Power of Attorney Form",
     "formNameCN": "要求授权书表",
+    "formNameTC": "要求授權書表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -213,6 +243,7 @@
     "formId": "FM26262",
     "formName": "Request for a Joint Account Form",
     "formNameCN": "要求联名账户表",
+    "formNameTC": "要求聯名賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -220,6 +251,7 @@
     "formId": "FM27272",
     "formName": "Request for a Trust Account Form",
     "formNameCN": "要求信托账户表",
+    "formNameTC": "要求信託賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -227,6 +259,7 @@
     "formId": "FM28282",
     "formName": "Request for a Business Account Form",
     "formNameCN": "要求商业账户表",
+    "formNameTC": "要求商業賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -234,6 +267,7 @@
     "formId": "FM29292",
     "formName": "Request for a Non-Profit Account Form",
     "formNameCN": "要求非营利账户表",
+    "formNameTC": "要求非營利賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -241,6 +275,7 @@
     "formId": "FM30303",
     "formName": "Request for a Government Account Form",
     "formNameCN": "要求政府账户表",
+    "formNameTC": "要求政府賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -248,6 +283,7 @@
     "formId": "FM31313",
     "formName": "Request for a Student Account Form",
     "formNameCN": "要求学生账户表",
+    "formNameTC": "要求學生賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -255,6 +291,7 @@
     "formId": "FM32323",
     "formName": "Request for a Senior Account Form",
     "formNameCN": "要求老年人账户表",
+    "formNameTC": "要求老年人賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -262,6 +299,7 @@
     "formId": "FM33333",
     "formName": "Request for a Minor Account Form",
     "formNameCN": "要求未成年人账户表",
+    "formNameTC": "要求未成年人賬戶表",
     "category": "Account Information Modification",
     "categoryId": "CG123456789"
   },
@@ -269,6 +307,7 @@
     "formId": "FM34343",
     "formName": "Request for a Certificate of Deposit (CD) Form",
     "formNameCN": "要求定期存款证明 (CD) 表",
+    "formNameTC": "要求定期存款證明 (CD) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -276,6 +315,7 @@
     "formId": "FM35353",
     "formName": "Request for an Individual Retirement Account (IRA) Form",
     "formNameCN": "要求个人退休账户 (IRA) 表",
+    "formNameTC": "要求個人退休賬戶 (IRA) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -283,6 +323,7 @@
     "formId": "FM36363",
     "formName": "Request for a Roth IRA Form",
     "formNameCN": "要求罗斯个人退休账户 (Roth IRA) 表",
+    "formNameTC": "要求羅斯個人退休賬戶 (Roth IRA) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -290,6 +331,7 @@
     "formId": "FM37373",
     "formName": "Request for a 401(k) Plan Form",
     "formNameCN": "要求 401(k) 计划表",
+    "formNameTC": "要求 401(k) 計劃表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -297,6 +339,7 @@
     "formId": "FM38383",
     "formName": "Request for a 403(b) Plan Form",
     "formNameCN": "要求 403(b) 计划表",
+    "formNameTC": "要求 403(b) 計劃表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -304,6 +347,7 @@
     "formId": "FM39393",
     "formName": "Request for a 529 Plan Form",
     "formNameCN": "要求 529 计划表",
+    "formNameTC": "要求 529 計劃表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -311,6 +355,7 @@
     "formId": "FM40404",
     "formName": "Request for a Health Savings Account (HSA) Form",
     "formNameCN": "要求健康储蓄账户 (HSA) 表",
+    "formNameTC": "要求健康儲蓄賬戶 (HSA) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -318,6 +363,7 @@
     "formId": "FM41414",
     "formName": "Request for a Flexible Spending Account (FSA) Form",
     "formNameCN": "要求弹性支出账户 (FSA) 表",
+    "formNameTC": "要求彈性支出賬戶 (FSA) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -325,6 +371,7 @@
     "formId": "FM42424",
     "formName": "Request for a Coverdell Education Savings Account (ESA) Form",
     "formNameCN": "要求科弗代尔教育储蓄账户 (ESA) 表",
+    "formNameTC": "要求科弗代爾教育儲蓄賬戶 (ESA) 表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -332,6 +379,7 @@
     "formId": "FM43434",
     "formName": "Request for a Uniform Gift to Minors Act (UGMA) Account Form",
     "formNameCN": "要求统一赠与未成年人法案 (UGMA) 账户表",
+    "formNameTC": "要求統一贈與未成年人法案 (UGMA) 賬戶表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   },
@@ -339,6 +387,7 @@
     "formId": "FM44444",
     "formName": "Request for a Uniform Transfer to Minors Act (UTMA) Account Form",
     "formNameCN": "要求统一转让给未成年人法案 (UTMA) 账户表",
+    "formNameTC": "要求統一轉讓給未成年人法案 (UTMA) 賬戶表",
     "category": "Investment and Wealth Management",
     "categoryId": "CG456789012"
   }
