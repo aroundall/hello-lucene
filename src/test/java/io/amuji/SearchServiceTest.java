@@ -93,8 +93,22 @@ class SearchServiceTest {
     }
 
     @Test
+    void matched_multiple_chinese_words_should_return_result() {
+        List<Request> matched = searchService.search(new Search()
+                .setKeywords("贈與未成年人法案"));
+        assertThat(matched).hasSize(4);
+    }
+
+    @Test
     void matched_fuzzy_query_should_have_result() {
         List<Request> matched = searchService.search(new Search().setKeywords("hallowen"));
+
+        assertThat(matched).hasSize(1);
+    }
+
+    @Test
+    void matched_fuzzy_en_mixed_zh_words_should_have_result() {
+        List<Request> matched = searchService.search(new Search().setKeywords("Unform acount 未成年人法案"));
 
         assertThat(matched).hasSize(1);
     }

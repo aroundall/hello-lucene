@@ -1,6 +1,7 @@
 package io.amuji;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
@@ -81,16 +82,20 @@ public class LuceneIndex {
 
     private Query buildQuery(Search search) {
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+
         if (search.hasKeywordsEn()) {
-            queryBuilder.add(new BooleanQuery.Builder()
-                    .add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), SHOULD)
-                    .build(), MUST);
+            BooleanQuery.Builder enKeywordsBuilder = new BooleanQuery.Builder();
+            for (String keyword : StringUtils.split(search.getKeywordsEn())) {
+                enKeywordsBuilder.add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, keyword)), SHOULD);
+            }
+
+            queryBuilder.add(enKeywordsBuilder.build(), MUST);
         }
 
         if (search.hasKeywordsZh()) {
             queryBuilder.add(new BooleanQuery.Builder()
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywords())), SHOULD)
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getKeywords())), SHOULD)
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywordsZh())), SHOULD)
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getKeywordsZh())), SHOULD)
                     .build(), MUST);
         }
 
