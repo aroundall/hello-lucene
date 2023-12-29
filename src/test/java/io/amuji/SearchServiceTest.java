@@ -91,4 +91,11 @@ class SearchServiceTest {
                 .setKeywords("贷款还款"));
         assertThat(matched).hasSize(4);
     }
+
+    @Test
+    void matched_fuzzy_query_should_have_result() {
+        List<Request> matched = searchService.search(new Search().setKeywords("hallowen"));
+
+        assertThat(matched).hasSize(1);
+    }
 }

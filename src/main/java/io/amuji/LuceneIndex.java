@@ -5,6 +5,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -40,7 +41,9 @@ public class LuceneIndex {
     private final Directory indexDir = new ByteBuffersDirectory();
     private final Analyzer analyzer;
     {
-        Map<String, Analyzer> analyzerMap = Map.of(FIELD_NAME_CAT_ID, new KeywordAnalyzer());
+        Map<String, Analyzer> analyzerMap = Map.of(
+                FIELD_NAME_FORM_NAME, new StandardAnalyzer(),
+                FIELD_NAME_CAT_ID, new KeywordAnalyzer());
         analyzer= new PerFieldAnalyzerWrapper(new CJKAnalyzer(), analyzerMap);
     }
 
@@ -78,9 +81,14 @@ public class LuceneIndex {
 
     private Query buildQuery(Search search) {
         BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
-        if (search.hasKeywords()) {
+        if (search.hasKeywordsEn()) {
             queryBuilder.add(new BooleanQuery.Builder()
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), SHOULD)
+                    .add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, search.getKeywords())), SHOULD)
+                    .build(), MUST);
+        }
+
+        if (search.hasKeywordsZh()) {
+            queryBuilder.add(new BooleanQuery.Builder()
                     .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywords())), SHOULD)
                     .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getKeywords())), SHOULD)
                     .build(), MUST);
@@ -124,6 +132,8 @@ public class LuceneIndex {
             matched.add(Request.builder()
                     .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
                     .categoryId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_CAT_ID))
+                    .formName(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME))
+                    .formNameCN(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME_CN))
                     .build());
         }
         return matched;
