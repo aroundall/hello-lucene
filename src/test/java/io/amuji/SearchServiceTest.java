@@ -4,7 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SearchServiceTest {
@@ -52,8 +56,8 @@ class SearchServiceTest {
                 .addCategory("CG234567890"));
         assertThat(matched).isNotEmpty();
         assertThat(matched.stream().allMatch(request -> {
-                String catId = request.getCategoryId();
-                return catId.equalsIgnoreCase("CG123456789") || catId.equalsIgnoreCase("CG234567890");
+            String catId = request.getCategoryId();
+            return catId.equalsIgnoreCase("CG123456789") || catId.equalsIgnoreCase("CG234567890");
         })).isTrue();
     }
 
@@ -108,8 +112,30 @@ class SearchServiceTest {
 
     @Test
     void matched_fuzzy_en_mixed_zh_words_should_have_result() {
+
+        Set<String> expectedFormIds = Stream.of(
+                        searchService.search(new Search().setKeywords("Unform")).stream(),
+                        searchService.search(new Search().setKeywords("acount")).stream(),
+                        searchService.search(new Search().setKeywords("未成年人")).stream(),
+                        searchService.search(new Search().setKeywords("法案")).stream())
+                .flatMap(Function.identity())
+                .map(Request::getFormId).collect(toSet());
+
+
         List<Request> matched = searchService.search(new Search().setKeywords("Unform acount 未成年人法案"));
 
-        assertThat(matched).hasSize(1);
+        assertThat(matched.stream().map(Request::getFormId).collect(toSet())).isEqualTo(expectedFormIds);
+        assertThat(matched)
+                .isNotEmpty()
+                .allMatch(request -> {
+                    String formName = request.getFormName().toLowerCase();
+                    String formNameCN = request.getFormNameCN();
+                    return formName.contains("uniform")
+                            || formName.contains("form")
+                            || formName.contains("account")
+                            || formName.contains("about")
+                            || formNameCN.contains("未成年人")
+                            || formNameCN.contains("法案");
+                });
     }
 }

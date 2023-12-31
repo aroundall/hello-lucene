@@ -81,32 +81,40 @@ public class LuceneIndex {
     }
 
     private Query buildQuery(Search search) {
-        BooleanQuery.Builder queryBuilder = new BooleanQuery.Builder();
+        BooleanQuery.Builder querybuilder = new BooleanQuery.Builder();
 
-        if (search.hasKeywordsEn()) {
-            BooleanQuery.Builder enKeywordsBuilder = new BooleanQuery.Builder();
-            for (String keyword : StringUtils.split(search.getKeywordsEn())) {
-                enKeywordsBuilder.add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, keyword)), SHOULD);
-            }
-
-            queryBuilder.add(enKeywordsBuilder.build(), MUST);
-        }
-
-        if (search.hasKeywordsZh()) {
-            queryBuilder.add(new BooleanQuery.Builder()
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getKeywordsZh())), SHOULD)
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getKeywordsZh())), SHOULD)
-                    .build(), MUST);
-        }
+        buildKeywordsQuery(search, querybuilder);
 
         if (search.hasCategories()) {
             BooleanQuery.Builder catQueryBuilder = new BooleanQuery.Builder();
             search.getCategories().forEach(category ->
                     catQueryBuilder.add(new TermQuery(new Term(FIELD_NAME_CAT_ID, category)), SHOULD));
-            queryBuilder.add(catQueryBuilder.build(), MUST);
+            querybuilder.add(catQueryBuilder.build(), MUST);
         }
 
-        return parseQuery(queryBuilder.build());
+        return parseQuery(querybuilder.build());
+    }
+
+    private static void buildKeywordsQuery(Search search, BooleanQuery.Builder querybuilder) {
+        if (!search.hasKeywords()) {
+            return;
+        }
+
+        BooleanQuery.Builder keywordsBuilder = new BooleanQuery.Builder();
+
+        if (search.hasEnglishKeywords()) {
+            for (String keyword : StringUtils.split(search.getEnglishKeywords())) {
+                keywordsBuilder.add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, keyword)), SHOULD);
+            }
+        }
+
+        if (search.hasChineseKeywords()) {
+            keywordsBuilder
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getChineseKeywords())), SHOULD)
+                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getChineseKeywords())), SHOULD);
+        }
+
+        querybuilder.add(keywordsBuilder.build(), MUST);
     }
 
     private Query parseQuery(Query query) {

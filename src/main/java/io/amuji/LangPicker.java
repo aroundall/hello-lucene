@@ -1,10 +1,13 @@
 package io.amuji;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class LangPicker {
 
     private final List<String> chineseWords = new ArrayList<>();
@@ -12,19 +15,10 @@ public class LangPicker {
 
     public LangPicker(String inputString) {
 
-        // Regular expression pattern for Chinese characters
-        String chinesePattern = "[\\u4E00-\\u9FA5]+";
-
-        // Regular expression pattern for English words
-        String englishPattern = "\\b[A-Za-z]+\\b";
-
-        // Create the pattern objects
-        Pattern chineseRegex = Pattern.compile(chinesePattern);
-        Pattern englishRegex = Pattern.compile(englishPattern);
-
-        // Create the matchers
-        Matcher chineseMatcher = chineseRegex.matcher(inputString);
-        Matcher englishMatcher = englishRegex.matcher(inputString);
+        Pattern chinesePattern = Pattern.compile("[\\u4E00-\\u9FA5]+");
+        Pattern englishPattern = Pattern.compile("\\b[A-Za-z1-9&\\-]+\\b");
+        Matcher chineseMatcher = chinesePattern.matcher(inputString);
+        Matcher englishMatcher = englishPattern.matcher(inputString);
 
         while (englishMatcher.find()) {
             englishWords.add(englishMatcher.group());
@@ -33,6 +27,9 @@ public class LangPicker {
         while (chineseMatcher.find()) {
             chineseWords.add(chineseMatcher.group());
         }
+
+        log.info("Picked English words: {}", this.englishWords);
+        log.info("Picked Chinese words: {}", this.chineseWords);
 
     }
 

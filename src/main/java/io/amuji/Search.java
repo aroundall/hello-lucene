@@ -1,5 +1,6 @@
 package io.amuji;
 
+import com.google.common.base.Joiner;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -30,41 +31,37 @@ public class Search {
         return StringUtils.isNotBlank(this.keywords);
     }
 
-    public boolean hasKeywordsEn() {
-        return StringUtils.isNotBlank(getKeywordsEn());
+    public boolean hasEnglishKeywords() {
+        return StringUtils.isNotBlank(getEnglishKeywords());
     }
 
-    public String getKeywordsEn() {
-        if (!this.hasKeywords()) {
-            return null;
-        }
-
+    public String getEnglishKeywords() {
         pickKeywords();
 
         return this.englishKeywords;
     }
 
-    public boolean hasKeywordsZh() {
-        return StringUtils.isNotBlank(getKeywordsZh());
+    public boolean hasChineseKeywords() {
+        return StringUtils.isNotBlank(getChineseKeywords());
     }
 
-    public String getKeywordsZh() {
-        if (!this.hasKeywords()) {
-            return null;
-        }
-
+    public String getChineseKeywords() {
         pickKeywords();
 
         return this.chineseKeywords;
     }
 
     private void pickKeywords() {
-        if (!picked) {
-            LangPicker langPicker = new LangPicker(this.keywords);
-            this.englishKeywords = String.join(" ", langPicker.getEnglishWords());
-            this.chineseKeywords = String.join("", langPicker.getChineseWords());
-            picked = true;
+        if (picked) {
+            return;
         }
+
+        if (StringUtils.isNotBlank(this.keywords)) {
+            LangPicker langPicker = new LangPicker(this.keywords);
+            this.englishKeywords = Joiner.on(" ").skipNulls().join(langPicker.getEnglishWords());
+            this.chineseKeywords = Joiner.on(" ").skipNulls().join(langPicker.getChineseWords());
+        }
+        picked = true;
     }
 
     public Search addCategory(String category) {
