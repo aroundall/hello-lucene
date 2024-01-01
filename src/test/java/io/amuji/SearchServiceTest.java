@@ -133,4 +133,14 @@ class SearchServiceTest {
                             || formNameCN.contains("法案");
                 });
     }
+
+    @Test
+    void pagination_should_work() {
+        List<Request> firstPage = searchService.search(new SearchRequest("account", new PageRequest(0, 5)));
+        assertThat(firstPage).hasSize(5);
+        List<Request> secondPage = searchService.search(new SearchRequest("account", new PageRequest(1, 5)));
+        assertThat(secondPage)
+                .hasSize(5)
+                .noneMatch(p -> firstPage.stream().map(Request::getFormId).collect(toSet()).contains(p.getFormId()));
+    }
 }

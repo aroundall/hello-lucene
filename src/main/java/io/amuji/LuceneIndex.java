@@ -12,10 +12,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.*;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 
@@ -69,7 +66,11 @@ public class LuceneIndex {
 
     public List<Request> search(SearchRequest searchRequest) {
         Query query = parseQuery(searchRequest.getQuery());
-        return search(query);
+        if (searchRequest.hasPageRequest()) {
+            return search(query, searchRequest.getPageRequest());
+        }else {
+            return search(query);
+        }
     }
 
 
@@ -84,7 +85,7 @@ public class LuceneIndex {
         }
     }
 
-    public List<Request> search(Query query) {
+    private List<Request> search(Query query) {
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
             TopDocs docs = searcher.search(query, MAX_HIT_SIZE);
@@ -95,17 +96,49 @@ public class LuceneIndex {
         }
     }
 
-    private static List<Request> toRequests(TopDocs docs, IndexSearcher searcher) throws IOException {
+    private List<Request> search(Query query, PageRequest pageRequest) {
+        TopScoreDocCollector collector = TopScoreDocCollector.create(
+                pageRequest.getSize() * (pageRequest.getPage() + 1), MAX_HIT_SIZE);
+        try {
+            IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
+            searcher.search(query, collector);
+
+            log.info("Total hits: {}", collector.getTotalHits());
+
+            return toRequest(pageRequest, collector, searcher);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private List<Request> toRequest(PageRequest pageRequest, TopScoreDocCollector collector, IndexSearcher searcher) throws IOException {
+        int start = pageRequest.getStart();
+        int end = Math.min(pageRequest.getEnd(), collector.getTotalHits());
+
+        ScoreDoc[] scoreDocs = collector.topDocs().scoreDocs;
         List<Request> matched = new ArrayList<>();
-        for (ScoreDoc scoreDoc : docs.scoreDocs) {
-            matched.add(Request.builder()
-                    .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
-                    .categoryId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_CAT_ID))
-                    .formName(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME))
-                    .formNameCN(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME_CN))
-                    .build());
+        for (int i = start; i < end; i++) {
+            ScoreDoc doc = scoreDocs[i];
+            matched.add(toRequest(searcher, doc));
         }
         return matched;
+    }
+
+    private List<Request> toRequests(TopDocs docs, IndexSearcher searcher) throws IOException {
+        List<Request> matched = new ArrayList<>();
+        for (ScoreDoc scoreDoc : docs.scoreDocs) {
+            matched.add(toRequest(searcher, scoreDoc));
+        }
+        return matched;
+    }
+
+    private Request toRequest(IndexSearcher searcher, ScoreDoc scoreDoc) throws IOException {
+        return Request.builder()
+                .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
+                .categoryId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_CAT_ID))
+                .formName(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME))
+                .formNameCN(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME_CN))
+                .build();
     }
 
 }

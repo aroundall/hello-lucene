@@ -29,6 +29,11 @@ public class SearchRequest {
 
     @Getter
     private String keywords;
+
+    @Getter
+    @Setter
+    private PageRequest pageRequest;
+
     private final List<Keyword> normalizedKeywords = new ArrayList<>();
 
     public SearchRequest() {
@@ -38,6 +43,14 @@ public class SearchRequest {
         setKeywords(keywords);
     }
 
+    public SearchRequest(PageRequest pageRequest) {
+        this.pageRequest = pageRequest;
+    }
+
+    public SearchRequest(String keywords, PageRequest pageRequest) {
+        this(keywords);
+        this.pageRequest = pageRequest;
+    }
 
     public Query getQuery() {
         if (this.isBlank()) {
@@ -136,6 +149,10 @@ public class SearchRequest {
             throw new RuntimeException(e);
         }
         return normalized;
+    }
+
+    public boolean hasPageRequest() {
+        return this.pageRequest != null;
     }
 
     private static class Keyword {
