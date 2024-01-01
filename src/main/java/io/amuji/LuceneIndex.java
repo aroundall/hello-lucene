@@ -3,10 +3,11 @@ package io.amuji;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.core.KeywordAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -43,7 +44,7 @@ public class LuceneIndex {
     private final Analyzer analyzer;
     {
         Map<String, Analyzer> analyzerMap = Map.of(
-                FIELD_NAME_FORM_NAME, new StandardAnalyzer(),
+//                FIELD_NAME_FORM_NAME, new StandardAnalyzer(),
                 FIELD_NAME_CAT_ID, new KeywordAnalyzer());
         analyzer= new PerFieldAnalyzerWrapper(new CJKAnalyzer(), analyzerMap);
     }
@@ -80,6 +81,30 @@ public class LuceneIndex {
         return search(query);
     }
 
+    public List<String> normalizeKeywords(String keywords) {
+        List<String> result  = new ArrayList<>();
+
+        if (StringUtils.isBlank(keywords)) {
+            return result;
+        }
+
+        try (TokenStream tokenStream = analyzer.tokenStream(FIELD_NAME_FORM_NAME_CN, keywords)) {
+            CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+
+            tokenStream.reset(); // Reset the token stream to the beginning
+
+            while (tokenStream.incrementToken()) {
+                String analyzedWord = charTermAttribute.toString();
+                result.add(analyzedWord);
+            }
+
+            tokenStream.end(); // Perform end-of-stream operations
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return  result;
+    }
+
     private Query buildQuery(Search search) {
         BooleanQuery.Builder querybuilder = new BooleanQuery.Builder();
 
@@ -96,22 +121,20 @@ public class LuceneIndex {
     }
 
     private static void buildKeywordsQuery(Search search, BooleanQuery.Builder querybuilder) {
-        if (!search.hasKeywords()) {
+        List<Search.Keyword> keywords = search.normalizedKeywords();
+        if (keywords.isEmpty()) {
             return;
         }
 
         BooleanQuery.Builder keywordsBuilder = new BooleanQuery.Builder();
 
-        if (search.hasEnglishKeywords()) {
-            for (String keyword : StringUtils.split(search.getEnglishKeywords())) {
-                keywordsBuilder.add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, keyword)), SHOULD);
+        for (Search.Keyword keyword : keywords) {
+            if (keyword.isChinese()) {
+                keywordsBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, keyword.getValue())), SHOULD);
+                keywordsBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, keyword.getValue())), SHOULD);
+            } else {
+                keywordsBuilder.add(new FuzzyQuery(new Term(FIELD_NAME_FORM_NAME, keyword.getValue())), SHOULD);
             }
-        }
-
-        if (search.hasChineseKeywords()) {
-            keywordsBuilder
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, search.getChineseKeywords())), SHOULD)
-                    .add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, search.getChineseKeywords())), SHOULD);
         }
 
         querybuilder.add(keywordsBuilder.build(), MUST);

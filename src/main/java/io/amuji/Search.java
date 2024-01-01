@@ -1,18 +1,17 @@
 package io.amuji;
 
-import com.google.common.base.Joiner;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 public class Search {
     private List<String> categories = new ArrayList<>();
     private String keywords;
-    private String englishKeywords;
-    private String chineseKeywords;
-    private boolean picked = false;
+    private final List<Keyword> normalizedKeywords = new ArrayList<>();
 
 
     public boolean isBlank() {
@@ -31,37 +30,14 @@ public class Search {
         return StringUtils.isNotBlank(this.keywords);
     }
 
-    public boolean hasEnglishKeywords() {
-        return StringUtils.isNotBlank(getEnglishKeywords());
+
+    public void normalizedKeywords(List<String> normalizedKeywords) {
+        this.normalizedKeywords.clear();
+        normalizedKeywords.forEach(keyword -> this.normalizedKeywords.add(new Keyword(keyword)));
     }
 
-    public String getEnglishKeywords() {
-        pickKeywords();
-
-        return this.englishKeywords;
-    }
-
-    public boolean hasChineseKeywords() {
-        return StringUtils.isNotBlank(getChineseKeywords());
-    }
-
-    public String getChineseKeywords() {
-        pickKeywords();
-
-        return this.chineseKeywords;
-    }
-
-    private void pickKeywords() {
-        if (picked) {
-            return;
-        }
-
-        if (StringUtils.isNotBlank(this.keywords)) {
-            LangPicker langPicker = new LangPicker(this.keywords);
-            this.englishKeywords = Joiner.on(" ").skipNulls().join(langPicker.getEnglishWords());
-            this.chineseKeywords = Joiner.on(" ").skipNulls().join(langPicker.getChineseWords());
-        }
-        picked = true;
+    public List<Keyword> normalizedKeywords() {
+        return this.normalizedKeywords;
     }
 
     public Search addCategory(String category) {
@@ -90,5 +66,29 @@ public class Search {
     public Search setKeywords(String keywords) {
         this.keywords = keywords;
         return this;
+    }
+
+    public static class Keyword {
+        private static final Pattern chinesePattern = Pattern.compile("[\\u4E00-\\u9FA5]+");
+
+        @Getter
+        private final String value;
+        private boolean isChinese;
+
+
+        public Keyword(String value) {
+            Objects.requireNonNull(value);
+            this.value = value;
+            detectLang();
+        }
+
+        private void detectLang() {
+            this.isChinese = chinesePattern.matcher(this.value).matches();
+        }
+
+        public boolean isChinese() {
+            return this.isChinese;
+        }
+
     }
 }
