@@ -22,21 +22,21 @@ class SearchServiceTest {
 
     @Test
     void matched_keyword_should_have_result() {
-        List<Request> matched = searchService.search(new Search().setKeywords("Address"));
+        List<Request> matched = searchService.search(new Search("Address"));
 
         assertThat(matched).hasSize(2);
     }
 
     @Test
     void matched_term_query_should_have_result() {
-        List<Request> matched = searchService.search(new Search().setKeywords("Certificate"));
+        List<Request> matched = searchService.search(new Search("Certificate"));
 
         assertThat(matched).hasSize(1);
     }
 
     @Test
     void matched_simplified_chinese_keyword_should_have_result() {
-        List<Request> matched = searchService.search(new Search().setKeywords("会面"));
+        List<Request> matched = searchService.search(new Search("会面"));
 
         assertThat(matched).hasSize(1);
     }
@@ -64,48 +64,43 @@ class SearchServiceTest {
 
     @Test
     void matched_keyword_and_keyword_should_return_result() {
-        List<Request> matched = searchService.search(new Search().addCategory("CG567890123").setKeywords("Procedure"));
+        List<Request> matched = searchService.search(new Search("Procedure").addCategory("CG567890123"));
         assertThat(matched).hasSize(1);
     }
 
     @Test
     void matched_keywords_should_return_result() {
-        List<Request> matched = searchService.search(new Search()
-                .setKeywords("Mortgage Payment"));
+        List<Request> matched = searchService.search(new Search("Mortgage Payment"));
         assertThat(matched).isNotEmpty();
     }
 
 
     @Test
     void matched_categories_and_keywords_should_return_result() {
-        List<Request> matched = searchService.search(new Search()
+        List<Request> matched = searchService.search(new Search("Mortgage Payment")
                 .addCategory("CG345678901")
-                .addCategory("CG345678901")
-                .setKeywords("Mortgage Payment"));
+                .addCategory("CG345678901"));
         assertThat(matched).hasSize(2);
     }
 
     @Test
     void matched_traditional_chinese_should_return_result() {
-        List<Request> matched = searchService.search(new Search()
-                .setKeywords("貸款還款"));
+        List<Request> matched = searchService.search(new Search("貸款還款"));
         assertThat(matched).hasSize(4);
 
-        matched = searchService.search(new Search()
-                .setKeywords("贷款还款"));
+        matched = searchService.search(new Search("贷款还款"));
         assertThat(matched).hasSize(4);
     }
 
     @Test
     void matched_multiple_chinese_words_should_return_result() {
-        List<Request> matched = searchService.search(new Search()
-                .setKeywords("贈與未成年人法案"));
+        List<Request> matched = searchService.search(new Search("贈與未成年人法案"));
         assertThat(matched).hasSize(4);
     }
 
     @Test
     void matched_fuzzy_query_should_have_result() {
-        List<Request> matched = searchService.search(new Search().setKeywords("hallowen"));
+        List<Request> matched = searchService.search(new Search("hallowen"));
 
         assertThat(matched).hasSize(1);
     }
@@ -114,15 +109,15 @@ class SearchServiceTest {
     void matched_fuzzy_en_mixed_zh_words_should_have_result() {
 
         Set<String> expectedFormIds = Stream.of(
-                        searchService.search(new Search().setKeywords("Unform")).stream(),
-                        searchService.search(new Search().setKeywords("acount")).stream(),
-                        searchService.search(new Search().setKeywords("未成年人")).stream(),
-                        searchService.search(new Search().setKeywords("法案")).stream())
+                        searchService.search(new Search("Unform")).stream(),
+                        searchService.search(new Search("acount")).stream(),
+                        searchService.search(new Search("未成年人")).stream(),
+                        searchService.search(new Search("法案")).stream())
                 .flatMap(Function.identity())
                 .map(Request::getFormId).collect(toSet());
 
 
-        List<Request> matched = searchService.search(new Search().setKeywords("Unform acount 未成年人法案"));
+        List<Request> matched = searchService.search(new Search("Unform acount 未成年人法案"));
 
         assertThat(matched.stream().map(Request::getFormId).collect(toSet())).isEqualTo(expectedFormIds);
         assertThat(matched)

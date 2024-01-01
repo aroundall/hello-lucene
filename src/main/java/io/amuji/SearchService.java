@@ -23,7 +23,6 @@ public class SearchService {
             return Collections.emptyList();
         }
 
-        search.normalizedKeywords(index.normalizeKeywords(search.getKeywords()));
         List<Request> result = index.search(search);
         log.info("Finished searching:");
         result.forEach(request -> log.info(request.toString()));
