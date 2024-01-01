@@ -67,8 +67,8 @@ public class LuceneIndex {
         return document;
     }
 
-    public List<Request> search(Search search) {
-        Query query = parseQuery(search.getQuery());
+    public List<Request> search(SearchRequest searchRequest) {
+        Query query = parseQuery(searchRequest.getQuery());
         return search(query);
     }
 

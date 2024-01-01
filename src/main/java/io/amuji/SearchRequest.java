@@ -22,7 +22,7 @@ import static io.amuji.Fields.*;
 import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 import static org.apache.lucene.search.BooleanClause.Occur.SHOULD;
 
-public class Search {
+public class SearchRequest {
     @Setter
     @Getter
     private List<String> categories = new ArrayList<>();
@@ -31,10 +31,10 @@ public class Search {
     private String keywords;
     private final List<Keyword> normalizedKeywords = new ArrayList<>();
 
-    public Search() {
+    public SearchRequest() {
     }
 
-    public Search(String keywords) {
+    public SearchRequest(String keywords) {
         setKeywords(keywords);
     }
 
@@ -59,7 +59,7 @@ public class Search {
     private Query buildKeywordsQuery() {
         BooleanQuery.Builder keywordsBuilder = new BooleanQuery.Builder();
 
-        for (Search.Keyword keyword : this.normalizedKeywords) {
+        for (SearchRequest.Keyword keyword : this.normalizedKeywords) {
             if (keyword.isChinese()) {
                 keywordsBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_CN, keyword.getValue())), SHOULD);
                 keywordsBuilder.add(new TermQuery(new Term(FIELD_NAME_FORM_NAME_TC, keyword.getValue())), SHOULD);
@@ -96,7 +96,7 @@ public class Search {
         return !this.normalizedKeywords.isEmpty();
     }
 
-    public Search addCategory(String category) {
+    public SearchRequest addCategory(String category) {
         Objects.requireNonNull(category);
         this.categories.add(category);
         return this;
@@ -106,12 +106,11 @@ public class Search {
         return !this.categories.isEmpty();
     }
 
-    public Search setKeywords(String keywords) {
+    public void setKeywords(String keywords) {
         this.keywords = keywords;
         this.normalizedKeywords.clear();
         normalizeKeywords(this.keywords).forEach(
                 keyword -> this.normalizedKeywords.add(new Keyword(keyword)));
-        return this;
     }
 
     private List<String> normalizeKeywords(String keywords) {
