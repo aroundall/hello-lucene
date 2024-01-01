@@ -11,21 +11,21 @@ public class SearchService {
     private final LuceneIndex index;
 
     public SearchService() {
-        List<Request> requests = new JsonDataLoader().load("sample-data.json");
+        List<Form> forms = new JsonDataLoader().load("sample-data.json");
         index = new LuceneIndex();
-        index.buildIndex(requests);
+        index.buildIndex(forms);
     }
 
-    public List<Request> search(SearchRequest searchRequest) {
+    public List<Form> search(SearchRequest searchRequest) {
         log.info("Start to search...");
         if (searchRequest.isBlank()) {
             log.warn("The search criteria is blank, returns empty.");
             return Collections.emptyList();
         }
 
-        List<Request> result = index.search(searchRequest);
+        List<Form> result = index.search(searchRequest);
         log.info("Finished searching:");
-        result.forEach(request -> log.info(request.toString()));
+        result.forEach(form -> log.info(form.toString()));
         return result;
     }
 }

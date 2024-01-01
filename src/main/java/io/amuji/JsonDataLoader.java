@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class JsonDataLoader {
-    public List<Request> load(String fileName) {
+    public List<Form> load(String fileName) {
         String data;
         try {
             data = Files.readString(Path.of(Objects.requireNonNull(this.getClass().getClassLoader().getResource(fileName)).toURI()), StandardCharsets.UTF_8);
@@ -21,6 +21,6 @@ public class JsonDataLoader {
             throw new RuntimeException(e);
         }
 
-        return new Gson().fromJson(data, new TypeToken<ArrayList<Request>>(){}.getType());
+        return new Gson().fromJson(data, new TypeToken<ArrayList<Form>>(){}.getType());
     }
 }

@@ -37,12 +37,12 @@ public class LuceneIndex {
         analyzer = new PerFieldAnalyzerWrapper(AnalyzerFactory.getInstance().getKeywordsAnalyzer(), analyzerMap);
     }
 
-    public void buildIndex(List<Request> requests) {
-        log.info("Start to build index for {} docs", requests.size());
+    public void buildIndex(List<Form> forms) {
+        log.info("Start to build index for {} docs", forms.size());
         try {
             IndexWriter writer = new IndexWriter(indexDir, new IndexWriterConfig(analyzer));
-            for (Request request : requests) {
-                Document document = createDocument(request);
+            for (Form form : forms) {
+                Document document = createDocument(form);
                 writer.addDocument(document);
 
             }
@@ -51,20 +51,20 @@ public class LuceneIndex {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.info("Completed to build index for {} docs", requests.size());
+        log.info("Completed to build index for {} docs", forms.size());
     }
 
-    private static Document createDocument(Request request) {
+    private static Document createDocument(Form form) {
         Document document = new Document();
-        document.add(new StringField(FIELD_NAME_FORM_ID, request.getFormId(), Field.Store.YES));
-        document.add(new TextField(FIELD_NAME_FORM_NAME, request.getFormName(), Field.Store.YES));
-        document.add(new TextField(FIELD_NAME_FORM_NAME_CN, request.getFormNameCN(), Field.Store.YES));
-        document.add(new TextField(FIELD_NAME_FORM_NAME_TC, request.getFormNameTC(), Field.Store.YES));
-        document.add(new StringField(FIELD_NAME_CAT_ID, request.getCategoryId(), Field.Store.YES));
+        document.add(new StringField(FIELD_NAME_FORM_ID, form.getFormId(), Field.Store.YES));
+        document.add(new TextField(FIELD_NAME_FORM_NAME, form.getFormName(), Field.Store.YES));
+        document.add(new TextField(FIELD_NAME_FORM_NAME_CN, form.getFormNameCN(), Field.Store.YES));
+        document.add(new TextField(FIELD_NAME_FORM_NAME_TC, form.getFormNameTC(), Field.Store.YES));
+        document.add(new StringField(FIELD_NAME_CAT_ID, form.getCategoryId(), Field.Store.YES));
         return document;
     }
 
-    public List<Request> search(SearchRequest searchRequest) {
+    public List<Form> search(SearchRequest searchRequest) {
         Query query = parseQuery(searchRequest.getQuery());
         if (searchRequest.hasPageRequest()) {
             return search(query, searchRequest.getPageRequest());
@@ -85,7 +85,7 @@ public class LuceneIndex {
         }
     }
 
-    private List<Request> search(Query query) {
+    private List<Form> search(Query query) {
         try {
             IndexSearcher searcher = new IndexSearcher(DirectoryReader.open(indexDir));
             TopDocs docs = searcher.search(query, MAX_HIT_SIZE);
@@ -96,7 +96,7 @@ public class LuceneIndex {
         }
     }
 
-    private List<Request> search(Query query, PageRequest pageRequest) {
+    private List<Form> search(Query query, PageRequest pageRequest) {
         TopScoreDocCollector collector = TopScoreDocCollector.create(
                 pageRequest.getSize() * (pageRequest.getPage() + 1), MAX_HIT_SIZE);
         try {
@@ -111,12 +111,12 @@ public class LuceneIndex {
         }
     }
 
-    private List<Request> toRequest(PageRequest pageRequest, TopScoreDocCollector collector, IndexSearcher searcher) throws IOException {
+    private List<Form> toRequest(PageRequest pageRequest, TopScoreDocCollector collector, IndexSearcher searcher) throws IOException {
         int start = pageRequest.getStart();
         int end = Math.min(pageRequest.getEnd(), collector.getTotalHits());
 
         ScoreDoc[] scoreDocs = collector.topDocs().scoreDocs;
-        List<Request> matched = new ArrayList<>();
+        List<Form> matched = new ArrayList<>();
         for (int i = start; i < end; i++) {
             ScoreDoc doc = scoreDocs[i];
             matched.add(toRequest(searcher, doc));
@@ -124,16 +124,16 @@ public class LuceneIndex {
         return matched;
     }
 
-    private List<Request> toRequests(TopDocs docs, IndexSearcher searcher) throws IOException {
-        List<Request> matched = new ArrayList<>();
+    private List<Form> toRequests(TopDocs docs, IndexSearcher searcher) throws IOException {
+        List<Form> matched = new ArrayList<>();
         for (ScoreDoc scoreDoc : docs.scoreDocs) {
             matched.add(toRequest(searcher, scoreDoc));
         }
         return matched;
     }
 
-    private Request toRequest(IndexSearcher searcher, ScoreDoc scoreDoc) throws IOException {
-        return Request.builder()
+    private Form toRequest(IndexSearcher searcher, ScoreDoc scoreDoc) throws IOException {
+        return Form.builder()
                 .formId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_ID))
                 .categoryId(searcher.doc(scoreDoc.doc).get(FIELD_NAME_CAT_ID))
                 .formName(searcher.doc(scoreDoc.doc).get(FIELD_NAME_FORM_NAME))

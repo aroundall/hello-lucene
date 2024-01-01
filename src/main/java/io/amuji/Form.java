@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class Request {
+public class Form {
     private String formId;
     private String formName;
     private String formNameCN;
